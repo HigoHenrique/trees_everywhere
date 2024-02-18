@@ -12,7 +12,8 @@ class PlantedTree(models.Model):
     )
     user = models.ForeignKey(
         'account.User',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True
     )
 
     def __str__(self) -> str:
@@ -22,8 +23,9 @@ class Tree(models.Model):
     name = models.CharField(max_length=50)
     scientific_name = models.CharField(max_length=150)
     plantedTree = models.ForeignKey(
-        'PlantedTree',
-        on_delete=models.CASCADE,
+        PlantedTree,
+        on_delete=models.PROTECT,
+        # related_name='trees',
         null=True,
         blank=True
     )
