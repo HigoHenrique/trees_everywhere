@@ -3,7 +3,7 @@
 {% block content %}
   <div class="form-wrapper">
 
-    <h2>Árvore 2</h2>
+    <h2>Parabéns {{user}} por plantar uma nova árvore</h2>
 
     <form 
       action="{% url "tree:create_tree" %}"
@@ -11,25 +11,32 @@
       enctype="multipart/form-data"
     >
     {% csrf_token %}
-
-    {{ form }}
-    {{ formset.management_form }}
-    {% for tree_form in formset %}
-    <div class="form-content">
-        <div class="form-group">
-          <label for="id_first_name">{{form.name}}</label>
-              {{ form.id }}
-              {{ form }}
-          <input type="submit" value="Salvar">
-        </div>
-      </div>
-      </div> 
-        {{ tree_form.id }}
-        {{ tree_form }}
-    {% endfor %}
+    <div>
+    {% for item in form %}
         <div class="form-content">
             <div class="form-group">
-              <button class="btn" type="submit">Proximo</button>
+              <label for="id_first_name">{{item.name}}</label>
+                  {{ item }}
+                  {{item.erros}}
+            </div>
+          </div>
+          </div> 
+        {% endfor %}
+      </div>
+      <div>
+        {% for form in formset %}
+        <div class="form-content">
+            <div class="form-group">
+              <label for="id_first_name">{{form.name}}</label>
+                  {{ form }}
+            </div>
+          </div>
+          </div> 
+        {% endfor %}
+      </div>
+        <div class="form-content">
+            <div class="form-group">
+              <button class="btn" type="submit">Plantar</button>
             </div>
     </form>
   </div>

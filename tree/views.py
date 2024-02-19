@@ -5,10 +5,9 @@ from tree.models import Tree, PlantedTree
 
 @login_required(login_url='account:login')
 def index(req):
-    user = req.user
-    print(user.id)
+    user = req.user.user
     trees = PlantedTree.get_all_tree_for_user(user)
-    paginator = Paginator(trees, 1)
+    paginator = Paginator(trees, 5)
     page_number = req.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -23,12 +22,11 @@ def index(req):
 
 @login_required(login_url='account:login')
 def search(req):
-    # trees = Tree.objects.filter(plantedTree_id=1).values()
     search_value = req.GET.get('q', '').strip()
     if search_value == '':
         return redirect('tree:index')
 
-    trees = Tree.get_tree(search_value)
+    trees = Tree.get_list_tree(search_value)
     paginator = Paginator(trees, 1)
     page_number = req.GET.get('page')
     page_obj = paginator.get_page(page_number)

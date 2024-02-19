@@ -3,14 +3,13 @@
 {% block content %}
     <div class="single-tree">
         <h1 class="single-tree-name">
-            {{ tree.name }}
+            <a href="{% url 'tree:index' %}" class="single-tree-link">{{ tree.name }}<a/>
         <p><b>ID:</b>{{tree.id}}</p>
         <p><b>Age:</b>{{tree.plantedTree.age}}</p>
         <p><b>Nome Cientifico: </b>{{tree.scientific_name}}</p>
         <p><b>Latitude:</b>{{tree.plantedTree.location_lat}}</p>
         <p><b>Longitude:</b>{{tree.plantedTree.location_long}}</p>
         <p><b>Plantada em: </b>{{tree.plantedTree.planted_at}}</p>
-        <p><b>Através da Conta: </b>{{tree.plantedTree.account_id}}</p>
         </h1>
     </div>
 {% endblock content %}

@@ -5,7 +5,7 @@
 {% if user.is_authenticated %}
     <p>
         Você já está logado como {{user.username}}.
-        Se deseja sair, clique <a href="{% url 'account:logout' %}" > aqui </a>
+        Se deseja sair clique <a href="{% url 'account:logout' %}" > aqui </a>
     </p>
 {% else %}
 
@@ -15,7 +15,6 @@ method="POST"
 >
 {% csrf_token %}
 <div class="form-content">
-    {{user}}
   {% for field in form %}
     <div class="form-group">
       <label for="{{ field.id_for_label }}">{{ field.label }}</label>

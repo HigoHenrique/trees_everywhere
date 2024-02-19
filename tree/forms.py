@@ -1,65 +1,58 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.core.paginator import Paginator
+from django.shortcuts import render, redirect
 from tree.models import Tree, PlantedTree
+from account.models import User
 from django import forms
-
+from django.contrib.auth.decorators import login_required
 class TreeForm(forms.ModelForm):
     class Meta:
         model = Tree
-        fields = ('name', 'scientific_name', 'plantedTree')
-
+        fields = ('name', 'scientific_name')
+        exclude = ('plantedTree',)
 
 class PlantedTreeForm(forms.ModelForm):
     class Meta:
         model = PlantedTree
-        fields = ('age', 'planted_at', 'location_lat', 'location_long', 'account', 'user')
+        fields = ('age', 'location_lat', 'location_long', 'account', 'user')
+        exclude = ('user','planted_at',)
 
+@login_required(login_url='account:login')
+def create_tree(request):
+    user = request.user.user
+    form = PlantedTreeForm()
+    formset = TreeForm()
+    if request.method == 'POST':
+        form = PlantedTreeForm(request.POST or None)
+        formset = TreeForm(request.POST)
+        if form.is_valid():
+            planted_tree = form.save(commit=False)
+            planted_tree.user = user
+            planted_tree.save()
+            if formset.is_valid():
+                tree = formset.save(commit=False)
+                tree.plantedTree = planted_tree
+                tree.save()
+            return redirect('tree:index')
+        
+        form = PlantedTreeForm()
+        formset = TreeForm()
 
-
-def create_plantedtree(req, pk):
-    planted_tree = PlantedTree.objects.get(pk=pk)
-    TreeFormSet = forms.inlineformset_factory(PlantedTree, Tree, form=TreeForm, extra=1)
-    if req.method == 'POST':
-        formset = TreeFormSet(req.POST, instance=planted_tree)
-        context = {
-            'formset': formset,
-        }
-        return render(
-            req,
-            'tree/create.html',
-            context
-        )
-
-    context = {
-        'formset': formset,
-    }
-    return render(
-        req,
-        'tree/create.html',
-        context
-    )
-
-def create_tree(req):
-    TreeFormSet = forms.inlineformset_factory(PlantedTree, Tree, form=TreeForm, extra=1)
-    form = PlantedTreeForm(req.POST)
-    formset = TreeFormSet(req.POST)
-    if req.method == 'POST':
         context = {
             'form': form,
             'formset': formset,
+            'user': user
         }
         return render(
-            req,
-            'tree/create.html',
+            request,
+            'tree/create_tree.html',
             context
         )
 
     context = {
          'form': form,
-        formset:formset,
+        'formset':formset,
     }
     return render(
-        req,
+        request,
         'tree/create_tree.html',
         context
     )
