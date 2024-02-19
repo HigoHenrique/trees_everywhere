@@ -1,0 +1,48 @@
+{% extends "global/base.html" %}
+{% block content %}
+{% if page_obj %}
+    <div class="responsive-table">
+        <table class="trees-table">
+            <caption class="table-caption">
+                Árvores
+            </caption>
+            <thead>
+                <tr class="table-row table-row-header">
+                    <th class="table-header">
+                        ID
+                    </th>
+                    <th class="table-header">
+                        Nome
+                    </th>
+                    <th class="table-header">
+                        Nome Cientifico
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="">
+                {% for tree in page_obj %}
+                    <tr class="table-row">
+                    <td class="table-cel">
+                        <a class="table-link" href="{% url 'tree:tree' tree.id %}">
+                            {{tree.id}}
+                        </a>
+                    </td>
+                    <td class="table-cel">
+                        {{tree.name}}
+                    </td>
+                    <td class="table-cel">
+                        {{tree.scientific_name}}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+        {% else %}
+    <div class="single-tree">
+        <h1 class="single-tree-name">
+            Nenhuma árvore encontrada.
+            </h1>
+        </div>
+    {% endif %}
+{% endblock content %}
